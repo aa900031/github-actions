@@ -1,0 +1,50 @@
+name: Setup Nodejs environment
+
+description: Setup tools and prepare environment for Nodejs
+
+inputs:
+  no-install-dependencies:
+    description: Don't run install dependencies
+    default: 'false'
+  no-turbo-cache:
+    description: Don't use turbo cache
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Setup Nodejs
+      uses: actions/setup-node@v4
+      with:
+        registry-url: https://registry.npmjs.org/
+        node-version-file: .tool-versions
+
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - name: Setup pnpm cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - name: Setup turbo cache
+      if: ${{ inputs.no-turbo-cache != 'true' }}
+      uses: actions/cache@v4
+      with:
+        path: .turbo
+        key: ${{ runner.os }}-turbo-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-turbo-
+
+    - name: Install dependencies
+      if: ${{ inputs.no-pnpm-install != 'true'' }}
+      shell: bash
+      run: pnpm install --frozen-lockfile

@@ -1,10 +1,13 @@
 # @aa900031/github-actions
 
-> Some usefull and reusable GitHub Actions for me
+> Some useful and reusable GitHub Actions for me
 
 ## setup-node
 
 Setup Node.js environment and install dependencies.
 
-- pnpm cache
-- turbo cache
+- Install pnpm by [packageManager](https://github.com/nodejs/corepack)
+- Install Node.js by [asdf](https://github.com/asdf-vm/asdf)
+- Auto pnpm cached
+- Auto turbo cached
+- Install dependencies respect lock file

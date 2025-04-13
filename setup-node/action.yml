@@ -45,6 +45,6 @@ runs:
           ${{ runner.os }}-turbo-
 
     - name: Install dependencies
-      if: ${{ inputs.no-pnpm-install != 'true' }}
+      if: ${{ inputs.no-install-dependencies != 'true' }}
       shell: bash
       run: pnpm install --frozen-lockfile
